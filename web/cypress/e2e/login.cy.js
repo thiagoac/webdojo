@@ -1,12 +1,7 @@
 describe('Login', () => {
   it('Deve logar com sucesso', () => {
-    cy.viewport(1280, 720)
-    cy.visit('http://localhost:3000/')
 
-    cy.get('#email').type('papito@webdojo.com')
-    cy.get('#password').type('katana123')
-
-    cy.contains('button','Entrar').click()
+    cy.submitLogin('papito@webdojo.com', 'katana123')
 
     cy.get('[data-cy="user-name"]')
       .should('be.visible')
@@ -17,4 +12,34 @@ describe('Login', () => {
       .and('have.text', 'Olá QA, esse é o seu Dojo para aprender Automação de Testes.')
 
   })
+
+  it('Erro ao logar com senha inválida', () => {
+    cy.viewport(1280, 720)
+    cy.visit('http://localhost:3000/')
+
+    cy.get('#email').type('papito@webdojo.com')
+    cy.get('#password').type('katana1234')
+
+    cy.contains('button','Entrar').click()
+
+    cy.contains('Acesso negado! Tente novamente.')
+      .should('be.visible')
+
+  })
+
+   it('Não deve logar com e-mail inválido', () => {
+    cy.viewport(1280, 720)
+    cy.visit('http://localhost:3000/')
+
+    cy.get('#email').type('papitod@webdojo.com')
+    cy.get('#password').type('katana1234')
+
+    cy.contains('button','Entrar').click()
+
+    cy.contains('Acesso negado! Tente novamente.')
+      .should('be.visible')
+
+  })
+
+
 })
